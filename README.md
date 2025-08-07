@@ -111,8 +111,6 @@ pnpm install
 npm install
 ```
 
-OU
-
 ### 3. Configure as variáveis de ambiente
 
 ```bash
