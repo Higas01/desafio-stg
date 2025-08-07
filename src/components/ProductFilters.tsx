@@ -125,7 +125,6 @@ const ProductFilters: React.FC<
           </select>
         </div>
 
-        {/* Price Filter */}
         <div className="relative">
           <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <select
@@ -166,7 +165,6 @@ const ProductFilters: React.FC<
         </div>
       </div>
 
-      {/* Custom Price Range */}
       {showCustomPrice && (
         <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
           <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3">
@@ -243,14 +241,12 @@ const ProductFilters: React.FC<
         </div>
       )}
 
-      {/* Active Filters Tags */}
       {hasActiveFilters && (
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <span className="text-sm text-gray-600 dark:text-gray-400">
             Filtros ativos:
           </span>
 
-          {/* Search Tag */}
           {searchTerm && (
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200">
               {`Busca: "${searchTerm}"`}
@@ -263,7 +259,6 @@ const ProductFilters: React.FC<
             </span>
           )}
 
-          {/* Category Tag */}
           {selectedCategory && (
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
               Categoria: {selectedCategory}
@@ -278,7 +273,6 @@ const ProductFilters: React.FC<
             </span>
           )}
 
-          {/* Price Tag */}
           {(priceRange.min > 0 ||
             priceRange.max > 0) && (
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
@@ -295,7 +289,6 @@ const ProductFilters: React.FC<
             </span>
           )}
 
-          {/* Clear All Button */}
           <button
             onClick={onClearAllFilters}
             className="text-xs text-primary-600 hover:text-primary-700 underline"

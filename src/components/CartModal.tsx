@@ -10,7 +10,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { formatCurrency } from '@/utils';
-import { openWhatsApp } from '@/services/whatsapp';
+import { openWhatsApp } from '@/utils/whatsapp';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useOrder } from '@/hooks/useOrder';
@@ -38,14 +38,14 @@ const CartModal: React.FC<CartModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleQuantityChange = async (
+  const handleQuantityChange = (
     itemId: string,
     newQuantity: number
   ) => {
     if (newQuantity < 1) {
-      await removeFromCart(itemId);
+      removeFromCart(itemId);
     } else {
-      await updateQuantity(itemId, newQuantity);
+      updateQuantity(itemId, newQuantity);
     }
   };
 
@@ -82,7 +82,6 @@ const CartModal: React.FC<CartModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
       <div className="bg-white dark:bg-gray-800 rounded-t-2xl sm:rounded-lg shadow-xl w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] flex flex-col animate-slide-up">
-        {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 rounded-t-2xl sm:rounded-t-lg">
           <div className="flex items-center space-x-2">
             <ShoppingBag className="h-5 w-5 text-primary-600" />
@@ -109,7 +108,6 @@ const CartModal: React.FC<CartModalProps> = ({
           </button>
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto">
           {cartItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 sm:py-16 px-4 sm:px-6">
@@ -137,9 +135,7 @@ const CartModal: React.FC<CartModalProps> = ({
                   key={item.id}
                   className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4"
                 >
-                  {/* Mobile Layout */}
                   <div className="flex sm:hidden">
-                    {/* Product Image */}
                     <div className="relative w-16 h-16 flex-shrink-0 mr-3">
                       <Image
                         src={
@@ -155,7 +151,6 @@ const CartModal: React.FC<CartModalProps> = ({
                       />
                     </div>
 
-                    {/* Product Info & Controls */}
                     <div className="flex-1 min-w-0">
                       <h4 className="font-medium text-gray-900 dark:text-white text-sm line-clamp-2 mb-1">
                         {item.product?.name}
@@ -167,9 +162,7 @@ const CartModal: React.FC<CartModalProps> = ({
                         cada
                       </p>
 
-                      {/* Controls Row */}
                       <div className="flex items-center justify-between">
-                        {/* Quantity Controls */}
                         <div className="flex items-center space-x-1 touch-manipulation">
                           <button
                             onClick={() =>
@@ -202,7 +195,6 @@ const CartModal: React.FC<CartModalProps> = ({
                           </button>
                         </div>
 
-                        {/* Price & Remove */}
                         <div className="flex items-center space-x-2">
                           <p className="font-medium text-gray-900 dark:text-white text-sm">
                             {formatCurrency(
@@ -228,9 +220,7 @@ const CartModal: React.FC<CartModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Desktop Layout */}
                   <div className="hidden sm:flex items-center space-x-4">
-                    {/* Product Image */}
                     <div className="relative w-20 h-20 flex-shrink-0">
                       <Image
                         src={
@@ -246,7 +236,6 @@ const CartModal: React.FC<CartModalProps> = ({
                       />
                     </div>
 
-                    {/* Product Info - Fixed width for alignment */}
                     <div className="flex-1 min-w-0 max-w-xs">
                       <h4 className="font-medium text-gray-900 dark:text-white line-clamp-2 mb-1">
                         {item.product?.name}
@@ -259,7 +248,6 @@ const CartModal: React.FC<CartModalProps> = ({
                       </p>
                     </div>
 
-                    {/* Quantity Controls - Fixed width for alignment */}
                     <div className="flex items-center justify-center space-x-3 min-w-[120px]">
                       <button
                         onClick={() =>
@@ -292,7 +280,6 @@ const CartModal: React.FC<CartModalProps> = ({
                       </button>
                     </div>
 
-                    {/* Price - Fixed width for alignment */}
                     <div className="text-right min-w-[100px]">
                       <p className="font-semibold text-lg text-gray-900 dark:text-white">
                         {formatCurrency(
@@ -302,7 +289,6 @@ const CartModal: React.FC<CartModalProps> = ({
                       </p>
                     </div>
 
-                    {/* Remove Button - Fixed width */}
                     <div className="min-w-[40px] flex justify-center">
                       <button
                         onClick={() =>
@@ -322,7 +308,6 @@ const CartModal: React.FC<CartModalProps> = ({
           )}
         </div>
 
-        {/* Footer */}
         {cartItems.length > 0 && (
           <div className="border-t border-gray-200 dark:border-gray-700 p-4 sm:p-6 space-y-4 bg-white dark:bg-gray-800 sticky bottom-0">
             {/* Total */}
@@ -335,7 +320,6 @@ const CartModal: React.FC<CartModalProps> = ({
               </span>
             </div>
 
-            {/* Actions - Improved desktop layout */}
             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
               <button
                 onClick={handleCheckout}

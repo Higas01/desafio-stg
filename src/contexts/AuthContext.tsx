@@ -52,12 +52,15 @@ export const AuthProvider: React.FC<
         return;
       }
       toast.success(
-        'Usuário cadastrado com sucesso!'
+        'Usuário cadastrado com sucesso! Ative sua conta através do email.'
       );
       return data;
     },
     onError: (error) => {
-      toast.error('Credenciais inválidas');
+      toast.error(
+        error.message ||
+          'Erro ao cadastrar usuário'
+      );
     },
   });
   const signInMutation = useMutation({
@@ -82,7 +85,9 @@ export const AuthProvider: React.FC<
       return data;
     },
     onError: (error) => {
-      toast.error('Credenciais inválidas');
+      toast.error(
+        error.message || 'Credenciais inválidas'
+      );
     },
   });
   const getSessionMutation = useMutation({
@@ -148,8 +153,15 @@ export const AuthProvider: React.FC<
   const signOut = async () =>
     await signOutMutation.mutateAsync();
 
+  const loading =
+    signInMutation.isPending ||
+    signUpMutation.isPending ||
+    getSessionMutation.isPending ||
+    signOutMutation.isPending;
+
   const value: AuthContextType = {
     user,
+    loading,
     setUser,
     signIn,
     signUp,

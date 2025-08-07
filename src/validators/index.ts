@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Esquemas de validação para autenticação
 export const signInSchema = z.object({
   email: z
     .string()
@@ -50,7 +49,6 @@ export const signUpSchema = z
     }
   );
 
-// Esquemas para produtos
 export const productSchema = z.object({
   id: z.string().uuid(),
   name: z
@@ -73,7 +71,6 @@ export const productSchema = z.object({
     .min(1, 'Categoria é obrigatória'),
 });
 
-// Esquemas para carrinho
 export const addToCartSchema = z.object({
   productId: z
     .string()
@@ -94,7 +91,6 @@ export const updateQuantitySchema = z.object({
     .max(99, 'Quantidade máxima é 99'),
 });
 
-// Esquemas para busca e filtros
 export const searchSchema = z
   .object({
     query: z
@@ -131,7 +127,6 @@ export const searchSchema = z
     }
   );
 
-// Esquemas para pedidos
 export const orderSchema = z.object({
   userId: z
     .string()
@@ -153,7 +148,6 @@ export const orderSchema = z.object({
     .min(1, 'Mensagem do WhatsApp é obrigatória'),
 });
 
-// Tipos TypeScript derivados dos esquemas
 export type SignInForm = z.infer<
   typeof signInSchema
 >;

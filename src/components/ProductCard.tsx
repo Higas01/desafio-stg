@@ -31,16 +31,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const [isWishlisted, setIsWishlisted] =
     useState(false);
 
-  const handleAddToCart = async () => {
-    try {
-      await addToCart(product.id, quantity);
-      setQuantity(1);
-    } catch (error) {
-      console.error(
-        'Error adding to cart:',
-        error
-      );
-    }
+  const handleAddToCart = () => {
+    addToCart(product.id, quantity);
+    toast.success(
+      'Produto adicionado ao carrinho!'
+    );
+    setQuantity(1);
   };
 
   const handleQuantityChange = (

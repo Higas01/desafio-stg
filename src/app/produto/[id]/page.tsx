@@ -52,22 +52,11 @@ export default function ProductDetailPage() {
   }, [product, loading, router]);
   const handleAddToCart = async () => {
     if (!selectedProduct) return;
-
-    try {
-      await addToCart(
-        selectedProduct.id,
-        quantity
-      );
-      setQuantity(1);
-    } catch (error) {
-      console.error(
-        'Error adding to cart:',
-        error
-      );
-      toast.error(
-        'Erro ao adicionar produto ao carrinho'
-      );
-    }
+    await addToCart(selectedProduct.id, quantity);
+    setQuantity(1);
+    toast.success(
+      'Produto adicionado ao carrinho!'
+    );
   };
 
   const handleQuantityChange = (
@@ -124,7 +113,6 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-shadow duration-300 animate-fade-in">
       <div className="container py-8">
-        {/* Header com botão voltar */}
         <div className="mb-6">
           <button
             onClick={() => router.back()}
@@ -136,7 +124,6 @@ export default function ProductDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Seção de Imagens */}
           <div className="space-y-4">
             <div className="relative aspect-square overflow-hidden rounded-xl bg-white dark:bg-gray-800 shadow-lg">
               {!imageError ? (
@@ -162,7 +149,6 @@ export default function ProductDetailPage() {
                 </div>
               )}
 
-              {/* Botões de ação sobre a imagem */}
               <div className="absolute top-4 right-4 flex space-x-2">
                 <button
                   onClick={toggleWishlist}
@@ -186,21 +172,17 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Seção de Informações */}
           <div className="space-y-6">
-            {/* Categoria */}
             <div>
               <span className="inline-block px-3 py-1 text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-900 rounded-full uppercase tracking-wide">
                 {product.category}
               </span>
             </div>
 
-            {/* Nome do Produto */}
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               {product.name}
             </h1>
 
-            {/* Avaliação (mock) */}
             <div className="flex items-center space-x-2">
               <div className="flex items-center">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -215,12 +197,10 @@ export default function ProductDetailPage() {
               </span>
             </div>
 
-            {/* Preço */}
             <div className="text-4xl font-bold text-primary-600 dark:text-primary-400">
               {formatCurrency(product.price)}
             </div>
 
-            {/* Descrição */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 Descrição
@@ -230,7 +210,6 @@ export default function ProductDetailPage() {
               </p>
             </div>
 
-            {/* Seletor de Quantidade */}
             <div className="flex items-center space-x-4">
               <span className="text-lg font-medium text-gray-700 dark:text-gray-300">
                 Quantidade:
@@ -259,7 +238,6 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Botão Adicionar ao Carrinho */}
             <div className="space-y-4">
               <button
                 onClick={handleAddToCart}
@@ -285,7 +263,6 @@ export default function ProductDetailPage() {
               )}
             </div>
 
-            {/* Informações Adicionais */}
             <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Informações do Produto

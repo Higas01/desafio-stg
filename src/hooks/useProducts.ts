@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { Product } from '@/types';
-import { supabase } from '@/services/supabase';
 import { ProductService } from '@/http/services/product.service';
 
 const fetchProducts = async (): Promise<

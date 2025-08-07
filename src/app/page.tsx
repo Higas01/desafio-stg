@@ -1,8 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
 import ProductGrid from '@/components/ProductGrid';
-import { SkeletonGrid } from '@/components/Skeleton';
 import {
   ShoppingBag,
   Star,
@@ -25,11 +23,9 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary-600 to-primary-800 dark:from-primary-700 dark:to-primary-900 text-white">
         <div className="container py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Hero Content */}
             <div className="space-y-8">
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
@@ -53,7 +49,6 @@ export default function HomePage() {
                 </p>
               </div>
 
-              {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={scrollToProdutos}
@@ -65,7 +60,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Hero Stats */}
             <div className="grid grid-cols-2 gap-6">
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20">
                 <div className="flex justify-center mb-4">
@@ -126,7 +120,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Wave Decoration */}
         <div className="relative">
           <svg
             className="w-full h-16 text-gray-50 dark:text-gray-900"
@@ -151,7 +144,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="py-16 bg-white dark:bg-gray-800">
         <div className="container">
           <div className="text-center mb-12">
@@ -166,7 +158,6 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
             <div className="text-center group">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                 <ShoppingBag className="h-8 w-8 text-white" />
@@ -181,7 +172,6 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Feature 2 */}
             <div className="text-center group">
               <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Star className="h-8 w-8 text-white" />
@@ -196,7 +186,6 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Feature 3 */}
             <div className="text-center group">
               <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                 <TrendingUp className="h-8 w-8 text-white" />
@@ -214,7 +203,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Products Section */}
       <section
         id="produtos"
         className="py-16 bg-gray-50 dark:bg-gray-900"
@@ -234,7 +222,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-primary-600 to-primary-700 dark:from-primary-700 dark:to-primary-800">
         <div className="container text-center">
           <div className="max-w-3xl mx-auto space-y-8">

@@ -35,7 +35,6 @@ const UserActionsContent: React.FC<
   return (
     <>
       <div className="flex items-center space-x-4">
-        {/* Cart Button */}
         <button
           onClick={() => setShowCartModal(true)}
           className="btn btn-outline btn-md relative"
@@ -49,7 +48,6 @@ const UserActionsContent: React.FC<
           )}
         </button>
 
-        {/* Auth Button */}
         <button
           onClick={handleAuthAction}
           className="btn btn-primary btn-md flex items-center space-x-2"
@@ -61,7 +59,6 @@ const UserActionsContent: React.FC<
         </button>
       </div>
 
-      {/* Cart Modal */}
       <CartModal
         isOpen={showCartModal}
         onClose={() => setShowCartModal(false)}

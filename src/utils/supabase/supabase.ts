@@ -6,13 +6,11 @@ const supabaseUrl =
 const supabaseAnonKey =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-// Cliente para uso geral (compatibilidade)
 export const supabase = createBrowserClient(
   supabaseUrl,
   supabaseAnonKey
 );
 
-// Cliente otimizado para SSR (Next.js 15)
 export const createSupabaseClient = () => {
   return createBrowserClient(
     supabaseUrl,
@@ -20,7 +18,6 @@ export const createSupabaseClient = () => {
   );
 };
 
-// Tipos para as tabelas do Supabase
 export type Database = {
   public: {
     Tables: {

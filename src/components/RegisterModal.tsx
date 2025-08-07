@@ -38,23 +38,28 @@ const signupSchema = z
     confirmPassword: z.string(),
   })
   .refine(
-    (data) => data.password === data.confirmPassword,
+    (data) =>
+      data.password === data.confirmPassword,
     {
       message: 'Senhas não coincidem',
       path: ['confirmPassword'],
     }
   );
 
-type SignupFormData = z.infer<typeof signupSchema>;
+type SignupFormData = z.infer<
+  typeof signupSchema
+>;
 
-const RegisterModal: React.FC<RegisterModalProps> = ({
-  isOpen,
-  onClose,
-  onSwitchToLogin,
-}) => {
+const RegisterModal: React.FC<
+  RegisterModalProps
+> = ({ isOpen, onClose, onSwitchToLogin }) => {
   const { signUp, loading } = useAuth();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] =
+    useState(false);
+  const [
+    showConfirmPassword,
+    setShowConfirmPassword,
+  ] = useState(false);
 
   const signupForm = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
@@ -62,14 +67,16 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleSignup = async (data: SignupFormData) => {
-    try {
-      await signUp(data.email, data.password, data.name);
-      onClose();
-      signupForm.reset();
-    } catch (error) {
-      // Error is handled in the context
-    }
+  const handleSignup = async (
+    data: SignupFormData
+  ) => {
+    await signUp(
+      data.email,
+      data.password,
+      data.name
+    );
+    onClose();
+    signupForm.reset();
   };
 
   return (
@@ -92,7 +99,9 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
         {/* Content */}
         <div className="p-6">
           <form
-            onSubmit={signupForm.handleSubmit(handleSignup)}
+            onSubmit={signupForm.handleSubmit(
+              handleSignup
+            )}
             className="space-y-4"
           >
             {/* Name */}
@@ -109,9 +118,13 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                   placeholder="Seu nome completo"
                 />
               </div>
-              {signupForm.formState.errors.name && (
+              {signupForm.formState.errors
+                .name && (
                 <p className="text-red-600 text-sm mt-1">
-                  {signupForm.formState.errors.name.message}
+                  {
+                    signupForm.formState.errors
+                      .name.message
+                  }
                 </p>
               )}
             </div>
@@ -125,14 +138,20 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="email"
-                  {...signupForm.register('email')}
+                  {...signupForm.register(
+                    'email'
+                  )}
                   className="input pl-10 w-full"
                   placeholder="seu@email.com"
                 />
               </div>
-              {signupForm.formState.errors.email && (
+              {signupForm.formState.errors
+                .email && (
                 <p className="text-red-600 text-sm mt-1">
-                  {signupForm.formState.errors.email.message}
+                  {
+                    signupForm.formState.errors
+                      .email.message
+                  }
                 </p>
               )}
             </div>
@@ -145,14 +164,22 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
-                  type={showPassword ? 'text' : 'password'}
-                  {...signupForm.register('password')}
+                  type={
+                    showPassword
+                      ? 'text'
+                      : 'password'
+                  }
+                  {...signupForm.register(
+                    'password'
+                  )}
                   className="input pl-10 pr-10 w-full"
                   placeholder="Sua senha"
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() =>
+                    setShowPassword(!showPassword)
+                  }
                   className="absolute right-3 top-1/2 transform -translate-y-1/2"
                 >
                   {showPassword ? (
@@ -162,9 +189,13 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                   )}
                 </button>
               </div>
-              {signupForm.formState.errors.password && (
+              {signupForm.formState.errors
+                .password && (
                 <p className="text-red-600 text-sm mt-1">
-                  {signupForm.formState.errors.password.message}
+                  {
+                    signupForm.formState.errors
+                      .password.message
+                  }
                 </p>
               )}
             </div>
@@ -177,14 +208,24 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  {...signupForm.register('confirmPassword')}
+                  type={
+                    showConfirmPassword
+                      ? 'text'
+                      : 'password'
+                  }
+                  {...signupForm.register(
+                    'confirmPassword'
+                  )}
                   className="input pl-10 pr-10 w-full"
                   placeholder="Confirme sua senha"
                 />
                 <button
                   type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  onClick={() =>
+                    setShowConfirmPassword(
+                      !showConfirmPassword
+                    )
+                  }
                   className="absolute right-3 top-1/2 transform -translate-y-1/2"
                 >
                   {showConfirmPassword ? (
@@ -194,9 +235,13 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                   )}
                 </button>
               </div>
-              {signupForm.formState.errors.confirmPassword && (
+              {signupForm.formState.errors
+                .confirmPassword && (
                 <p className="text-red-600 text-sm mt-1">
-                  {signupForm.formState.errors.confirmPassword.message}
+                  {
+                    signupForm.formState.errors
+                      .confirmPassword.message
+                  }
                 </p>
               )}
             </div>

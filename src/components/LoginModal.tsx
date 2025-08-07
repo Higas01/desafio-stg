@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   X,
@@ -14,6 +14,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCart } from '@/contexts/CartContext';
 import { nextTick } from 'process';
+import toast from 'react-hot-toast';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -77,7 +78,13 @@ const LoginModal: React.FC<LoginModalProps> = ({
       data.email,
       data.password
     );
-    nextTick(() => addToCartWhenSignedIn());
+    nextTick(() => {
+      const isAdded = addToCartWhenSignedIn();
+      isAdded &&
+        toast.success(
+          'Produto adicionado ao carrinho!'
+        );
+    });
     if (response.data) {
       onClose();
     }
@@ -101,7 +108,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6">
           <form
             onSubmit={loginForm.handleSubmit(
@@ -109,7 +115,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
             )}
             className="space-y-4"
           >
-            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Email
@@ -134,7 +139,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
               )}
             </div>
 
-            {/* Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Senha
@@ -178,24 +182,14 @@ const LoginModal: React.FC<LoginModalProps> = ({
               )}
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="btn btn-primary btn-md w-full"
             >
-              {/* {loading ? (
-                <>
-                  <div className="w-4 h-4 mr-2 bg-white/30 rounded animate-pulse" />
-                  Entrando...
-                </>
-              ) : (
-                'Entrar'
-              )} */}
               Entrar
             </button>
           </form>
 
-          {/* Switch to Register */}
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Não tem uma conta?

@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import { useProducts } from '@/hooks/useProducts';
 import { useProductFilters } from '@/hooks/useProductFilters';
 import ProductCard from './ProductCard';
@@ -78,7 +77,6 @@ const ProductGrid: React.FC = () => {
           {filteredProducts.length} produto(s)
           encontrado(s)
         </div>
-
       </div>
 
       {/* Grid de Produtos */}

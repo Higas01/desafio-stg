@@ -56,6 +56,7 @@ export interface AuthContextType {
   setUser: React.Dispatch<
     React.SetStateAction<User | null>
   >;
+  loading: boolean;
   signIn: (
     email: string,
     password: string
@@ -75,13 +76,13 @@ export interface CartContextType {
   addToCart: (
     productId: string,
     quantity?: number
-  ) => any;
-  removeFromCart: (itemId: string) => any;
+  ) => void;
+  removeFromCart: (itemId: string) => void;
   updateQuantity: (
     itemId: string,
     quantity: number
-  ) => any;
-  clearCart: () => any;
+  ) => void;
+  clearCart: () => void;
   getCartTotal: () => number;
-  addToCartWhenSignedIn: () => void;
+  addToCartWhenSignedIn: () => boolean;
 }

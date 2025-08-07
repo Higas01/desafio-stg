@@ -1,4 +1,4 @@
-import { supabase } from '@/services/supabase';
+import { supabase } from '@/utils/supabase/supabase';
 import { CartItem, Order } from '@/types';
 
 export interface CreateOrderData {
@@ -16,7 +16,6 @@ export interface OrderFilters {
 }
 
 export class OrderService {
-  // Criar novo pedido
   static async createOrder(
     orderData: CreateOrderData
   ): Promise<Order> {
@@ -49,7 +48,6 @@ export class OrderService {
     };
   }
 
-  // Buscar pedidos do usuário
   static async getUserOrders(
     userId: string,
     filters?: OrderFilters
@@ -60,7 +58,6 @@ export class OrderService {
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
-    // Aplicar filtros
     if (filters?.startDate) {
       query = query.gte(
         'created_at',
@@ -105,7 +102,6 @@ export class OrderService {
     }));
   }
 
-  // Buscar pedido específico por ID
   static async getOrderById(
     orderId: string
   ): Promise<Order | null> {
@@ -117,7 +113,7 @@ export class OrderService {
 
     if (error) {
       if (error.code === 'PGRST116') {
-        return null; // Pedido não encontrado
+        return null;
       }
       throw new Error(
         `Erro ao buscar pedido: ${error.message}`
@@ -135,7 +131,6 @@ export class OrderService {
     };
   }
 
-  // Buscar estatísticas de pedidos do usuário
   static async getUserOrderStats(
     userId: string
   ): Promise<{
@@ -168,7 +163,6 @@ export class OrderService {
     return stats;
   }
 
-  // Verificar se usuário tem pedidos
   static async hasOrders(
     userId: string
   ): Promise<boolean> {
@@ -187,7 +181,6 @@ export class OrderService {
     return data.length > 0;
   }
 
-  // Buscar último pedido do usuário
   static async getLastOrder(
     userId: string
   ): Promise<Order | null> {
@@ -201,7 +194,7 @@ export class OrderService {
 
     if (error) {
       if (error.code === 'PGRST116') {
-        return null; // Nenhum pedido encontrado
+        return null;
       }
       throw new Error(
         `Erro ao buscar último pedido: ${error.message}`
@@ -219,7 +212,6 @@ export class OrderService {
     };
   }
 
-  // Duplicar pedido (criar novo pedido baseado em um existente)
   static async duplicateOrder(
     orderId: string,
     userId: string
@@ -247,7 +239,6 @@ export class OrderService {
     });
   }
 
-  // Buscar pedidos recentes (últimos 30 dias)
   static async getRecentOrders(
     userId: string,
     limit = 10

@@ -1,13 +1,10 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { CartProvider } from '@/contexts/CartContext';
 import { Toaster } from 'react-hot-toast';
 import ReactQueryProvider from '@/components/Providers/ReactQueryProvider';
 import ClientLayoutProvider from '@/components/Providers/ClientLayoutProvider';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'STG Catalog - E-commerce Moderno',
@@ -38,7 +35,7 @@ export default function RootLayout({
     <html lang="pt-BR" className="h-full">
       <head></head>
       <body
-        className={`${inter.className} h-full bg-white dark:bg-gray-900`}
+        className={`h-full bg-white dark:bg-gray-900`}
         suppressHydrationWarning={true}
       >
         <ReactQueryProvider>

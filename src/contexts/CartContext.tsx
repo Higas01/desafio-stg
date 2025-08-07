@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useState,
   useCallback,
+  useRef,
 } from 'react';
 import {
   Cart,
@@ -46,16 +47,73 @@ export const CartProvider: React.FC<
   const [cart, setCart] = useState<Cart | null>(
     null
   );
+  const [activeActions, setActiveActions] =
+    useState<Set<string>>(new Set());
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const actionTimeouts = useRef<
+    Map<string, NodeJS.Timeout>
+  >(new Map());
 
-  // Query Keys
   const CART_QUERY_KEY = [
     'cart',
     user?.id || 'guest',
   ];
 
-  // Query para carregar carrinho de usuário autenticado
+  const isActionActive = useCallback(
+    (actionKey: string): boolean => {
+      return activeActions.has(actionKey);
+    },
+    [activeActions]
+  );
+
+  const setActionActive = useCallback(
+    (actionKey: string) => {
+      setActiveActions((prev) =>
+        new Set(prev).add(actionKey)
+      );
+
+      const existingTimeout =
+        actionTimeouts.current.get(actionKey);
+      if (existingTimeout) {
+        clearTimeout(existingTimeout);
+      }
+
+      const timeout = setTimeout(() => {
+        setActiveActions((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(actionKey);
+          return newSet;
+        });
+        actionTimeouts.current.delete(actionKey);
+      }, 10000);
+
+      actionTimeouts.current.set(
+        actionKey,
+        timeout
+      );
+    },
+    []
+  );
+
+  const clearActionActive = useCallback(
+    (actionKey: string) => {
+      setActiveActions((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(actionKey);
+        return newSet;
+      });
+
+      const timeout =
+        actionTimeouts.current.get(actionKey);
+      if (timeout) {
+        clearTimeout(timeout);
+        actionTimeouts.current.delete(actionKey);
+      }
+    },
+    []
+  );
+
   const {
     data: userCartItems,
     isLoading: isLoadingUserCart,
@@ -64,10 +122,9 @@ export const CartProvider: React.FC<
     queryFn: () =>
       CartService.getCartItems(user!.id),
     enabled: !!user,
-    staleTime: 1000 * 60 * 5, // Cache por 5 minutos
+    staleTime: 1000 * 60 * 5,
   });
 
-  // Função para carregar carrinho local (guest)
   const loadLocalCart = useCallback(async () => {
     const localCartItems =
       CartService.getLocalCart();
@@ -96,11 +153,6 @@ export const CartProvider: React.FC<
           });
         }
       } catch (error) {
-        console.error(
-          'Error loading local cart product:',
-          error
-        );
-        // Remove item inválido do carrinho local
         CartService.removeFromLocalCart(
           localItem.product_id
         );
@@ -125,7 +177,6 @@ export const CartProvider: React.FC<
     });
   }, []);
 
-  // Atualizar cart quando userCartItems mudar
   useEffect(() => {
     if (user && userCartItems) {
       const total = userCartItems.reduce(
@@ -149,31 +200,43 @@ export const CartProvider: React.FC<
     }
   }, [user, userCartItems, loadLocalCart]);
 
-  // Mutations do carrinho - tudo centralizado aqui
   const addToCartMutation = useMutation({
     mutationFn: async ({
       productId,
       quantity,
-      showSuccessToast,
     }: {
       productId: string;
       quantity: number;
-      showSuccessToast?: boolean;
     }) => {
-      if (user) {
-        await CartService.addItem(
-          user.id,
-          productId,
-          quantity
-        );
-      } else {
-        CartService.addToLocalCart(
-          productId,
-          quantity
+      const actionKey = `add-${productId}`;
+
+      if (isActionActive(actionKey)) {
+        throw new Error(
+          'Ação já está sendo executada'
         );
       }
+
+      setActionActive(actionKey);
+
+      try {
+        if (user) {
+          await CartService.addItem(
+            user.id,
+            productId,
+            quantity
+          );
+        } else {
+          CartService.addToLocalCart(
+            productId,
+            quantity
+          );
+        }
+        return { productId, quantity, actionKey };
+      } finally {
+        clearActionActive(actionKey);
+      }
     },
-    onSuccess: () => {
+    onSuccess: ({ actionKey }) => {
       if (user) {
         queryClient.invalidateQueries({
           queryKey: CART_QUERY_KEY,
@@ -181,17 +244,17 @@ export const CartProvider: React.FC<
       } else {
         loadLocalCart();
       }
-      {
-        toast.success(
-          'Produto adicionado ao carrinho!'
-        );
-      }
     },
     onError: (error: Error) => {
-      toast.error(
-        error.message ||
-          'Erro ao adicionar ao carrinho'
-      );
+      if (
+        error.message !==
+        'Ação já está sendo executada'
+      ) {
+        toast.error(
+          error.message ||
+            'Erro ao adicionar ao carrinho'
+        );
+      }
     },
   });
 
@@ -203,16 +266,31 @@ export const CartProvider: React.FC<
       itemId: string;
       quantity: number;
     }) => {
-      if (user) {
-        await CartService.updateQuantity(
-          itemId,
-          quantity
+      const actionKey = `update-${itemId}`;
+
+      if (isActionActive(actionKey)) {
+        throw new Error(
+          'Ação já está sendo executada'
         );
-      } else {
-        CartService.updateLocalCartQuantity(
-          itemId,
-          quantity
-        );
+      }
+
+      setActionActive(actionKey);
+
+      try {
+        if (user) {
+          await CartService.updateQuantity(
+            itemId,
+            quantity
+          );
+        } else {
+          CartService.updateLocalCartQuantity(
+            itemId,
+            quantity
+          );
+        }
+        return { itemId, quantity, actionKey };
+      } finally {
+        clearActionActive(actionKey);
       }
     },
     onSuccess: () => {
@@ -225,19 +303,39 @@ export const CartProvider: React.FC<
       }
     },
     onError: (error: Error) => {
-      toast.error(
-        error.message ||
-          'Erro ao atualizar quantidade'
-      );
+      if (
+        error.message !==
+        'Ação já está sendo executada'
+      ) {
+        toast.error(
+          error.message ||
+            'Erro ao atualizar quantidade'
+        );
+      }
     },
   });
 
   const removeFromCartMutation = useMutation({
     mutationFn: async (itemId: string) => {
-      if (user) {
-        await CartService.removeItem(itemId);
-      } else {
-        CartService.removeFromLocalCart(itemId);
+      const actionKey = `remove-${itemId}`;
+
+      if (isActionActive(actionKey)) {
+        throw new Error(
+          'Ação já está sendo executada'
+        );
+      }
+
+      setActionActive(actionKey);
+
+      try {
+        if (user) {
+          await CartService.removeItem(itemId);
+        } else {
+          CartService.removeFromLocalCart(itemId);
+        }
+        return { itemId, actionKey };
+      } finally {
+        clearActionActive(actionKey);
       }
     },
     onSuccess: () => {
@@ -253,19 +351,39 @@ export const CartProvider: React.FC<
       );
     },
     onError: (error: Error) => {
-      toast.error(
-        error.message ||
-          'Erro ao remover do carrinho'
-      );
+      if (
+        error.message !==
+        'Ação já está sendo executada'
+      ) {
+        toast.error(
+          error.message ||
+            'Erro ao remover do carrinho'
+        );
+      }
     },
   });
 
   const clearCartMutation = useMutation({
     mutationFn: async () => {
-      if (user) {
-        await CartService.clearCart(user.id);
-      } else {
-        CartService.clearLocalCart();
+      const actionKey = 'clear-cart';
+
+      if (isActionActive(actionKey)) {
+        throw new Error(
+          'Ação já está sendo executada'
+        );
+      }
+
+      setActionActive(actionKey);
+
+      try {
+        if (user) {
+          await CartService.clearCart(user.id);
+        } else {
+          CartService.clearLocalCart();
+        }
+        return { actionKey };
+      } finally {
+        clearActionActive(actionKey);
       }
     },
     onSuccess: () => {
@@ -279,26 +397,52 @@ export const CartProvider: React.FC<
       toast.success('Carrinho limpo!');
     },
     onError: (error: Error) => {
-      toast.error(
-        error.message || 'Erro ao limpar carrinho'
-      );
+      if (
+        error.message !==
+        'Ação já está sendo executada'
+      ) {
+        toast.error(
+          error.message ||
+            'Erro ao limpar carrinho'
+        );
+      }
     },
   });
 
   const addToCart = useCallback(
     (productId: string, quantity = 1) => {
+      const actionKey = `add-${productId}`;
+      if (isActionActive(actionKey)) {
+        return;
+      }
       addToCartMutation.mutate({
         productId,
         quantity,
       });
     },
-    [addToCartMutation]
+    [addToCartMutation, isActionActive]
+  );
+
+  const removeFromCart = useCallback(
+    (itemId: string) => {
+      const actionKey = `remove-${itemId}`;
+      if (isActionActive(actionKey)) {
+        return;
+      }
+      removeFromCartMutation.mutate(itemId);
+    },
+    [removeFromCartMutation, isActionActive]
   );
 
   const updateQuantity = useCallback(
     (itemId: string, quantity: number) => {
+      const actionKey = `update-${itemId}`;
+      if (isActionActive(actionKey)) {
+        return;
+      }
+
       if (quantity < 1) {
-        removeFromCartMutation.mutate(itemId);
+        removeFromCart(itemId);
       } else {
         updateQuantityMutation.mutate({
           itemId,
@@ -308,48 +452,43 @@ export const CartProvider: React.FC<
     },
     [
       updateQuantityMutation,
-      removeFromCartMutation,
+      isActionActive,
+      removeFromCart,
     ]
   );
 
-  const removeFromCart = useCallback(
-    (itemId: string) => {
-      removeFromCartMutation.mutate(itemId);
-    },
-    [removeFromCartMutation]
-  );
-
   const clearCart = useCallback(() => {
+    if (!cart || isActionActive('clear-cart')) {
+      return;
+    }
     clearCartMutation.mutate();
-  }, [clearCartMutation]);
+  }, [clearCartMutation, cart, isActionActive]);
 
   const getCartTotal = useCallback(() => {
     return cart?.total || 0;
   }, [cart?.total]);
 
-  const addToCartWhenSignedIn = () => {
-    const cart = CartService.getLocalCart();
-    if (cart.length === 0) {
-      return;
-    }
-    cart.forEach((item) => {
-      addToCart(item.product_id, item.quantity);
-    });
-    CartService.clearLocalCart();
-  };
+  const addToCartWhenSignedIn =
+    useCallback(() => {
+      const localCart =
+        CartService.getLocalCart();
+      if (localCart.length === 0) {
+        return false;
+      }
+      localCart.forEach((item) => {
+        addToCart(item.product_id, item.quantity);
+      });
+      CartService.clearLocalCart();
+      return true;
+    }, [addToCart]);
 
-  // Loading state unificado
   const loading =
-    isLoadingUserCart ||
-    addToCartMutation.isPending ||
-    updateQuantityMutation.isPending ||
-    removeFromCartMutation.isPending ||
-    clearCartMutation.isPending;
+    activeActions.size > 0 || isLoadingUserCart;
 
   const value: CartContextType = {
     cart,
-    loading,
     addToCart,
+    loading,
     removeFromCart,
     updateQuantity,
     addToCartWhenSignedIn,

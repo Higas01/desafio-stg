@@ -30,7 +30,6 @@ export const useProductFilters = ({
     300
   );
 
-  // Calcular faixas de preço baseadas nos produtos
   const priceRanges = useMemo(() => {
     if (products.length === 0) return [];
 
@@ -71,18 +70,15 @@ export const useProductFilters = ({
     ];
   }, [products]);
 
-  // Aplicar filtros
   const filteredProducts = useMemo(() => {
     let result = products;
 
-    // Filtro por busca
     if (debouncedSearchTerm) {
       result = searchProducts(
         debouncedSearchTerm
       );
     }
 
-    // Filtro por categoria
     if (selectedCategory) {
       result = result.filter(
         (product) =>
@@ -90,7 +86,6 @@ export const useProductFilters = ({
       );
     }
 
-    // Filtro por preço
     if (
       priceRange.min > 0 ||
       priceRange.max > 0
@@ -120,10 +115,8 @@ export const useProductFilters = ({
     searchProducts,
   ]);
 
-  // Obter categorias
   const categories = Array.from(getCategories());
 
-  // Actions
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
   };
@@ -146,7 +139,6 @@ export const useProductFilters = ({
     setPriceRange({ min: 0, max: 0 });
   };
 
-  // Estados e valores
   const hasActiveFilters =
     searchTerm ||
     selectedCategory ||
@@ -154,18 +146,15 @@ export const useProductFilters = ({
     priceRange.max > 0;
 
   return {
-    // Estados
     searchTerm,
     selectedCategory,
     priceRange,
     hasActiveFilters,
 
-    // Dados
     categories,
     priceRanges,
     filteredProducts,
 
-    // Actions
     handleSearchChange,
     handleCategoryChange,
     handlePriceRangeChange,

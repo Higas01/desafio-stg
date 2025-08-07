@@ -14,23 +14,17 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
 interface UseOrderReturn {
-  // Queries
   orders: Order[];
   stats: OrderStats | undefined;
   isLoadingOrders: boolean;
   isLoadingStats: boolean;
 
-  // Mutations
   createOrder: (
     orderData: Omit<CreateOrderData, 'user_id'>
   ) => void;
-  duplicateOrder: (orderId: string) => void;
 
-  // Loading states
   isCreatingOrder: boolean;
-  isDuplicatingOrder: boolean;
 
-  // Utils
   refetchOrders: () => void;
   refetchStats: () => void;
 }
@@ -41,11 +35,9 @@ export const useOrder = (): UseOrderReturn => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  // Query keys
   const ORDERS_KEY = ['orders', user?.id];
   const STATS_KEY = ['order-stats', user?.id];
 
-  // Query para buscar pedidos do usuário
   const {
     data: orders = [],
     isLoading: isLoadingOrders,
@@ -55,10 +47,9 @@ export const useOrder = (): UseOrderReturn => {
     queryFn: () =>
       OrderService.getUserOrders(user!.id),
     enabled: !!user,
-    staleTime: 1000 * 60 * 5, // Cache por 5 minutos
+    staleTime: 1000 * 60 * 5,
   });
 
-  // Query para buscar estatísticas
   const {
     data: stats,
     isLoading: isLoadingStats,
@@ -68,10 +59,9 @@ export const useOrder = (): UseOrderReturn => {
     queryFn: () =>
       OrderService.getUserOrderStats(user!.id),
     enabled: !!user,
-    staleTime: 1000 * 60 * 10, // Cache por 10 minutos
+    staleTime: 1000 * 60 * 10,
   });
 
-  // Mutation para criar pedido
   const createOrderMutation = useMutation({
     mutationFn: async (
       orderData: Omit<CreateOrderData, 'user_id'>
@@ -87,8 +77,7 @@ export const useOrder = (): UseOrderReturn => {
         user_id: user.id,
       });
     },
-    onSuccess: (newOrder) => {
-      // Invalidar queries relacionadas
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ORDERS_KEY,
       });
@@ -96,89 +85,31 @@ export const useOrder = (): UseOrderReturn => {
         queryKey: STATS_KEY,
       });
 
-      // Limpar carrinho após sucesso
       clearCart();
-
-      // Feedback para usuário
-      toast.success('Pedido criado com sucesso!');
-
-      // Redirecionar para pedidos
-      router.push('/pedidos');
     },
     onError: (error: Error) => {
-      console.error(
-        'Erro ao criar pedido:',
-        error
-      );
       toast.error(
         error.message || 'Erro ao criar pedido'
       );
     },
   });
 
-  // Mutation para duplicar pedido
-  const duplicateOrderMutation = useMutation({
-    mutationFn: async (orderId: string) => {
-      if (!user) {
-        throw new Error(
-          'Usuário não autenticado'
-        );
-      }
-
-      return OrderService.duplicateOrder(
-        orderId,
-        user.id
-      );
-    },
-    onSuccess: (duplicatedOrder) => {
-      // Invalidar queries relacionadas
-      queryClient.invalidateQueries({
-        queryKey: ORDERS_KEY,
-      });
-      queryClient.invalidateQueries({
-        queryKey: STATS_KEY,
-      });
-
-      // Feedback para usuário
-      toast.success(
-        'Pedido duplicado com sucesso!'
-      );
-    },
-    onError: (error: Error) => {
-      console.error(
-        'Erro ao duplicar pedido:',
-        error
-      );
-      toast.error(
-        error.message || 'Erro ao duplicar pedido'
-      );
-    },
-  });
-
   return {
-    // Queries
     orders,
     stats,
     isLoadingOrders,
     isLoadingStats,
 
-    // Mutations
     createOrder: createOrderMutation.mutate,
-    duplicateOrder: duplicateOrderMutation.mutate,
 
-    // Loading states
     isCreatingOrder:
       createOrderMutation.isPending,
-    isDuplicatingOrder:
-      duplicateOrderMutation.isPending,
 
-    // Utils
     refetchOrders,
     refetchStats,
   };
 };
 
-// Hook especializado para histórico de pedidos (página /pedidos)
 export const useOrderHistory = (filters?: {
   search?: string;
   dateRange?:
@@ -233,7 +164,6 @@ export const useOrderHistory = (filters?: {
     enabled: !!user,
   });
 
-  // Filtrar por busca localmente (mais eficiente)
   const filteredOrders = orders.filter(
     (order) => {
       if (!filters?.search) return true;
@@ -262,7 +192,6 @@ export const useOrderHistory = (filters?: {
   };
 };
 
-// Hook para verificar se usuário tem pedidos (para mostrar onboarding)
 export const useHasOrders = () => {
   const { user } = useAuth();
 
@@ -271,11 +200,10 @@ export const useHasOrders = () => {
     queryFn: () =>
       OrderService.hasOrders(user!.id),
     enabled: !!user,
-    staleTime: 1000 * 60 * 15, // Cache por 15 minutos
+    staleTime: 1000 * 60 * 15,
   });
 };
 
-// Hook para buscar último pedido (para suggestions)
 export const useLastOrder = () => {
   const { user } = useAuth();
 
@@ -284,6 +212,6 @@ export const useLastOrder = () => {
     queryFn: () =>
       OrderService.getLastOrder(user!.id),
     enabled: !!user,
-    staleTime: 1000 * 60 * 5, // Cache por 5 minutos
+    staleTime: 1000 * 60 * 5,
   });
 };

@@ -24,7 +24,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   const handleClose = () => {
-    setIsLogin(true); // Reset to login when closing
+    setIsLogin(true);
     onClose();
   };
 

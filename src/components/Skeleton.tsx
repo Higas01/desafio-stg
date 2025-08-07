@@ -68,14 +68,12 @@ const Skeleton: React.FC<SkeletonProps> = ({
   );
 };
 
-// Skeleton para Card de Produto
 export const SkeletonCard: React.FC<{
   className?: string;
 }> = ({ className = '' }) => (
   <div
     className={`p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 ${className}`}
   >
-    {/* Imagem do produto */}
     <Skeleton
       variant="rectangular"
       height={200}
@@ -113,7 +111,6 @@ export const SkeletonCard: React.FC<{
   </div>
 );
 
-// Skeleton para Grid de Produtos
 export const SkeletonGrid: React.FC<{
   count?: number;
   className?: string;
@@ -129,14 +126,12 @@ export const SkeletonGrid: React.FC<{
   </div>
 );
 
-// Skeleton para Detalhes do Produto
 export const SkeletonProductDetail: React.FC<{
   className?: string;
 }> = ({ className = '' }) => (
   <div
     className={`grid grid-cols-1 lg:grid-cols-2 gap-8 ${className}`}
   >
-    {/* Imagem do produto */}
     <div className="space-y-4">
       <Skeleton
         variant="rectangular"
@@ -214,53 +209,6 @@ export const SkeletonProductDetail: React.FC<{
   </div>
 );
 
-// Skeleton para Lista de Itens (ex: carrinho)
-export const SkeletonList: React.FC<{
-  count?: number;
-  className?: string;
-}> = ({ count = 3, className = '' }) => (
-  <div className={`space-y-4 ${className}`}>
-    {Array.from({ length: count }).map(
-      (_, index) => (
-        <div
-          key={index}
-          className="flex items-center space-x-4 p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
-        >
-          {/* Imagem do produto */}
-          <Skeleton
-            variant="rectangular"
-            width={80}
-            height={80}
-            className="rounded-lg"
-          />
-
-          {/* Detalhes do produto */}
-          <div className="flex-1 space-y-2">
-            <Skeleton variant="text" />
-            <Skeleton
-              variant="text"
-              width="60%"
-            />
-            <div className="flex justify-between items-center">
-              <Skeleton
-                variant="text"
-                width={80}
-              />
-              <Skeleton
-                variant="rectangular"
-                width={100}
-                height={32}
-                className="rounded-md"
-              />
-            </div>
-          </div>
-        </div>
-      )
-    )}
-  </div>
-);
-
-// Skeleton para Header
 export const SkeletonHeader: React.FC<{
   className?: string;
 }> = ({ className = '' }) => (
@@ -299,18 +247,6 @@ export const SkeletonHeader: React.FC<{
   </header>
 );
 
-// Skeleton para Search Bar
-export const SkeletonSearch: React.FC<{
-  className?: string;
-}> = ({ className = '' }) => (
-  <div className={`w-full ${className}`}>
-    <Skeleton
-      variant="rectangular"
-      height={48}
-      className="rounded-lg"
-    />
-  </div>
-);
 export const OrderCardSkeleton: React.FC = () => {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 animate-pulse">

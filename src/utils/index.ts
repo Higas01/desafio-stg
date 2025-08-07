@@ -21,7 +21,6 @@ export const formatDate = (
     diffInMs / (1000 * 60 * 60 * 24)
   );
 
-  // Se for hoje
   if (diffInDays === 0) {
     return `Hoje, ${date.toLocaleTimeString(
       'pt-BR',
@@ -32,7 +31,6 @@ export const formatDate = (
     )}`;
   }
 
-  // Se foi ontem
   if (diffInDays === 1) {
     return `Ontem, ${date.toLocaleTimeString(
       'pt-BR',
@@ -43,12 +41,10 @@ export const formatDate = (
     )}`;
   }
 
-  // Se foi na última semana
   if (diffInDays <= 7) {
     return `${diffInDays} dias atrás`;
   }
 
-  // Data completa
   return date.toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: '2-digit',

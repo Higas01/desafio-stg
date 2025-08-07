@@ -10,15 +10,14 @@ import {
   X,
   Sun,
   Moon,
-  Search,
   LogOut,
   ChevronDown,
 } from 'lucide-react';
 import { useDarkMode } from '@/hooks/useCommon';
 import CartModal from './CartModal';
 import { SkeletonHeader } from './Skeleton';
-import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface HeaderProps {
   onAuthClick: () => void;
@@ -40,6 +39,7 @@ const Header: React.FC<HeaderProps> = ({
     useState(false);
   const [isLoggingOut, setIsLoggingOut] =
     useState(false);
+  const router = useRouter();
 
   const cartItemCount =
     cart?.items.reduce(
@@ -53,6 +53,7 @@ const Header: React.FC<HeaderProps> = ({
     setShowUserMenu(false);
     setIsMobileMenuOpen(false);
     setIsLoggingOut(false);
+    router.push('/');
   };
 
   const handleAuthAction = () => {
