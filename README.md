@@ -79,13 +79,6 @@ Foi criado um arquivo `.github/copilot-instructions.md` com as instruções base
 - React Query para cache de dados
 - localStorage para persistência
 
-**Qualidade & Testes**
-
-- Jest + Testing Library
-- TypeScript strict mode
-- Error boundaries
-- Sistema de logs mockado
-
 ## 🛠️ Instalação e Configuração
 
 ### Pré-requisitos
@@ -130,13 +123,12 @@ git clone https://github.com/seu-usuario/stg-catalog-challenge.git
 cd stg-catalog-challenge
 ```
 
-````
 
 ### 2. Inicialize o container:
 
 ```bash
 docker compose up
-````
+```
 
 ## 📁 Estrutura do Projeto
 
