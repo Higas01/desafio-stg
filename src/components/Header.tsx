@@ -12,6 +12,7 @@ import {
   Moon,
   LogOut,
   ChevronDown,
+  LucideShoppingBag,
 } from 'lucide-react';
 import { useDarkMode } from '@/hooks/useCommon';
 import CartModal from './CartModal';
@@ -222,6 +223,16 @@ const Header: React.FC<HeaderProps> = ({
                     </span>
                   )}
                 </button>
+
+                <Link
+                  href="/pedidos"
+                  className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors"
+                >
+                  <div className="flex items-center">
+                    <LucideShoppingBag className="h-5 w-5 mr-3 flex-shrink-0" />
+                    Pedidos
+                  </div>
+                </Link>
 
                 {/* Theme Toggle */}
                 <button
