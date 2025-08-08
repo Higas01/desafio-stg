@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<
         return;
       }
       toast.success(
-        'Usuário cadastrado com sucesso! Ative sua conta através do email.'
+        'Usuário cadastrado com sucesso! (Para facilitar, não precisa ativar a conta através do email, apenas se autenticar.).'
       );
       return data;
     },
