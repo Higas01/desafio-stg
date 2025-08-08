@@ -86,22 +86,23 @@ const Header: React.FC<HeaderProps> = ({
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-4">
               {/* Navigation Links */}
-              {user && (
-                <nav className="flex items-center space-x-4">
-                  <Link
-                    href="/"
-                    className="text-gray-700 dark:text-gray-200 hover:text-green-600 dark:hover:text-green-400 transition-colors"
-                  >
-                    Produtos
-                  </Link>
+              <nav className="flex items-center space-x-4">
+                <Link
+                  href="/"
+                  className="text-gray-700 dark:text-gray-200 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                >
+                  Produtos
+                </Link>
+
+                {user && (
                   <Link
                     href="/pedidos"
                     className="text-gray-700 dark:text-gray-200 hover:text-green-600 dark:hover:text-green-400 transition-colors"
                   >
                     Pedidos
                   </Link>
-                </nav>
-              )}
+                )}
+              </nav>
 
               {/* Theme Toggle */}
               <button
@@ -216,15 +217,19 @@ const Header: React.FC<HeaderProps> = ({
                   </div>
                 </Link>
 
-                <Link
-                  href="/pedidos"
-                  className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors"
-                >
-                  <div className="flex items-center">
-                    <LucideShoppingBag className="h-5 w-5 mr-3 flex-shrink-0" />
-                    Pedidos
-                  </div>
-                </Link>
+                {user && (
+                  <>
+                    <Link
+                      href="/pedidos"
+                      className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors"
+                    >
+                      <div className="flex items-center">
+                        <LucideShoppingBag className="h-5 w-5 mr-3 flex-shrink-0" />
+                        Pedidos
+                      </div>
+                    </Link>
+                  </>
+                )}
 
                 {/* Cart */}
                 <button
